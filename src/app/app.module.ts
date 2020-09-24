@@ -1,18 +1,31 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import{ReactiveFormsModule}from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+import { LoginComponent } from './components/login/login.component';
+import { MyDocumentsComponent } from './components/my-documents/my-documents.component';
+import {  NewdocumentComponent} from './components/new-document/newdocument.component';
+import {HttpClientModule} from '@angular/common/http';
+import { TopMenuComponent } from './components/top-menu/top-menu.component';
+import { RegisterComponent } from './components/register/register.component';
+import { EditDocComponent } from './components/edit-doc/edit-doc.component';
+import { MyDocumentService } from './services/my-document.service';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    MyDocumentsComponent,
+    NewdocumentComponent,
+    TopMenuComponent,
+    RegisterComponent,
+    EditDocComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,ReactiveFormsModule,HttpClientModule
   ],
-  providers: [],
+  providers: [MyDocumentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

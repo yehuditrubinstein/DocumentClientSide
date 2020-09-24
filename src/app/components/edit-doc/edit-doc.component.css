@@ -1,0 +1,12 @@
+.container 
+{
+    left:0px;
+    top:0px;
+    /* background-color: darkkhaki; */
+    width:800px;height:1200px;
+background-image: url(src/assets/images/1.png);
+} 
+.canvas 
+{
+    position:absolute
+}

@@ -1,0 +1,20 @@
+<p>edit-doc works!</p>
+<button (click)="SetMode('Rect')">Rect</button>
+<button (click)="SetMode('Ellipse')">Ellipse</button>
+<button (click)="Clear()">Clear</button>
+<label>Stroke Color:</label>
+<input id="foreColor" type="color" value='black' rgba/>
+<label>Fill  Color:</label>
+<input id="backColor" type="color" value='black'/>
+<button (click)="NoFill()">No Fill</button>
+
+
+<div  #container id="container" class="container">
+   
+    <canvas class="canvas" #shapeCanvas id="shapeCanvas"></canvas>
+    <canvas  class="canvas" #drawingCanvas id="drawingCanvas"></canvas>
+
+</div>
+<input type="text" #shareText>
+<input type="button" value="add sharing" (click)="AddSharing(shareText.value)">
+<!-- <input type="button" (click)="tryy()"> -->

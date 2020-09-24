@@ -1,0 +1,13 @@
+
+<form id="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <label>User ID:(email address):</label>
+    <input id="UserID" formControlName="UserID"/><br/>
+    <label>Your name:</label>
+    <input id="UserName" formControlName="UserName"/><br/>
+    <button type="submit" [disabled]='!userForm.valid' >Register</button>
+    <button type="submit" [disabled]='!userForm.valid' >Login</button>
+
+
+</form>
+
+ 

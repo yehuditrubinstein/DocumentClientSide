@@ -1,0 +1,12 @@
+<form id="form" [formGroup]="DocForm" (ngSubmit)="onSubmit()">
+    <label>DocName:</label>
+    <input id="DocName" formControlName="DocName"/><br/>
+    <label>ImageUrl:</label>
+    <input id="ImageUrl" formControlName="ImageUrl"/><br/>
+    <button type="submit" [disabled]='!DocForm.valid' >create</button>
+
+</form>
+
+
+      <!-- <input class="file-upload-input" type="file" value="" (change) ="onFileChange($event)"  #file  />
+        <h3>לחץ כאן להעלאת קבצים</h3> -->

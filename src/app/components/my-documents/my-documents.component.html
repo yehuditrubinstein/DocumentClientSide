@@ -1,0 +1,23 @@
+<h1>my documents work!</h1>
+<input type="button" value="create new document" (click)="OpenAddDoc()">
+<router-outlet></router-outlet>
+<h2>my documents</h2>
+<div *ngFor="let item of myDocs let i=index" class="CardStyle" data-font-size="12" data-font-size-type="px"
+  style="width: 50%;">
+  <div (click)="OpenEditDoc(item)" tabindex="0" data-font-size="12" data-font-size-type="px">
+    <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
+    <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
+    <a href="{{item.ImageURL}}" target="_blank"> <input type="button" value="צפה בקובץ" class="bttn"></a>
+    <input type="button" value="מחק קובץ" (click)="removefile()" class="bttn red" />
+  </div>
+</div>
+<h2>my shared documents</h2>
+<div *ngFor="let item of myShareDocs let i=index" class="CardStyle" data-font-size="12" data-font-size-type="px"
+  style="width: 50%;">
+  <div (click)="OpenEditDoc(item)" tabindex="0" data-font-size="12" data-font-size-type="px">
+    <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
+    <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
+    <a href="{{item.ImageURL}}" target="_blank"> <input type="button" value="צפה בקובץ" class="bttn"></a>
+    <input type="button" value="מחק קובץ" (click)="removefile()" class="bttn red" />
+  </div>
+</div>

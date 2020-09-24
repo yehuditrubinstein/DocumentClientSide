@@ -1,0 +1,128 @@
+
+  .container2 {
+    position: absolute;
+    text-align: right;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    right: 5px;
+    left:720px;
+  }
+  .responsive-table {
+    margin-top: 40px;
+  }
+    li {
+      border-radius: 3px;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+    .table-header {
+      background-color: #e71a1ac4;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .table-row {
+      background-color: #ffffff;
+      box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+    }
+    .col-1 {
+      flex-basis: 10%;
+    }
+    .col-2 {
+      flex-basis: 10%;
+    }
+    .col-3 {
+      flex-basis: 10%;
+    }
+    .col-4 {
+      flex-basis: 10%;
+    }
+    .col-5 {
+        flex-basis: 10%;
+      }
+    .col-6 {
+        flex-basis: 10%;
+      }
+      .col-7 {
+        flex-basis: 1%;
+      }
+    
+      /* .MainPanelHeader {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+      .KorotFileSize{
+      position: absolute;
+      left: 2px;
+      top: 30px;
+      }
+      
+      .KorotOpt {
+      height:0px;
+      padding:0px !important;
+      overflow:hidden;
+      }
+      
+      .KorotFile.Open .KorotOpt {
+      height:32px !important;
+      padding:5px 0px !important;
+      }
+      
+      .DefaultCVText {
+      color: red;
+      display: inline-block;
+      margin-right: 5px;
+      font-size: 12px;
+      }
+      
+      .CardRow > #wrapDeatils {
+      padding-right: 40px;
+      position:relative;
+      }
+      
+      .CardRow > #wrapDeatils:before {
+      content: "";
+      background-image: url(/images/topsargelicons/document_black.png);
+      display: block;
+      width: 30px;
+      height: 30px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      right: 4px;
+      background-position: center;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      }
+      
+      .CardRow > #wrapDeatils .CardHeader {
+      padding: 3px 0;
+      }
+      
+      @media only screen and (max-width:700px){
+      .CardRow.KorotFile {
+        width:calc(100% - 20px);
+        padding:10px;
+      }
+      
+      .KorotOpt {
+        display: flex;
+        justify-content: space-around;
+      }
+      
+      .KorotOpt > input {
+        width: 33%;
+        line-height: 100%;
+      }
+      
+      #frmKorot {
+        height: 500px !important;
+      }
+      }
+       */
+      

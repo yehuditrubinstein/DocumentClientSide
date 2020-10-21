@@ -11,6 +11,9 @@ import { TopMenuComponent } from './components/top-menu/top-menu.component';
 import { RegisterComponent } from './components/register/register.component';
 import { EditDocComponent } from './components/edit-doc/edit-doc.component';
 import { MyDocumentService } from './services/my-document.service';
+import { CommentComponent } from './components/comment/comment.component';
+import { SharingsComponent } from './components/sharings/sharings.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,8 +22,9 @@ import { MyDocumentService } from './services/my-document.service';
     NewdocumentComponent,
     TopMenuComponent,
     RegisterComponent,
-    EditDocComponent
-  ],
+    EditDocComponent,
+    CommentComponent,
+    SharingsComponent  ],
   imports: [
     BrowserModule,
     AppRoutingModule,ReactiveFormsModule,HttpClientModule

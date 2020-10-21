@@ -1,0 +1,13 @@
+<div style="display:inline-block">
+    <div id="share" >
+        <div *ngFor="let item of Sharing let i=index" data-font-size="12" data-font-size-type="px"
+            style="width: 50%;">
+            <div>שיתפת את המסמך הזה עם</div>
+            <div data-font-size="12" data-font-size-type="px">{{item.UserId}}</div>
+            <button class="btn"(click)="removeShare(item.UserId)" ><i class="fa fa-trash"></i></button>
+
+        </div>
+        <input type="text" placeholder="insert email to share your doc with" #shareText>
+        <button class="btn" (click)="AddSharing(shareText.value)"><i class='fa fa-share-alt'>  share </i></button>
+    </div>
+</div>

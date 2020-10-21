@@ -1,24 +1,49 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, EventEmitter, Injectable, Output } from '@angular/core';
 import { from, fromEvent, Observable, Subject } from 'rxjs';
-import { buffer, map,tap, switchMap, takeUntil, takeWhile, filter } from 'rxjs/operators';
+import { buffer, map, tap, switchMap, takeUntil, takeWhile, filter } from 'rxjs/operators';
 import { point } from "../models/point";
 import { FreeDraw } from "../models/FreeDraw";
 import { Shape } from '../models/Shape'
 import { CommService } from './comm-service';
 import { MarkerRequestAdd, RequestGetMarkers } from '../models/MarkerRequest';
-import { MarkerDTO, MarkerResponse } from "../models/Marker";
+import { MarkerDTO, MarkerRequestRemove, MarkerResponse } from "../models/Marker";
 import { Guid } from 'guid-typescript';
+import { DocumentSharingRequest, sharingDTO } from '../models/Sharing';
+import { CommentDTO, CommentRequest, CommentResponse } from '../models/Comment'
+import { GeometryService } from "../services/geometry.service";
 @Injectable({
   providedIn: 'root'
 })
 export class EditDocService {
+
+
+  @Output() addCommentClickedEvent = new EventEmitter<any>();
+  @Output() markerCilckedEvent = new EventEmitter<any>();
+  @Output() markerchangedEvent = new EventEmitter<any>();
+  markerchanged(comments){
+    this.markerchangedEvent.emit(comments);
+  }
+  AClicked() {
+    this.addCommentClickedEvent.emit();
+  }
+  markerClicked(markerID: Guid) {
+    
+    this.markerCilckedEvent.emit(markerID);
+  }
+
+  selectMode = false;
+  MyMarkers: MarkerDTO[] = [];
+  SelectedPoint: { x, y } = null;
+  selectedMakrer$: MarkerDTO
+  functionsByType = { 'Rect': this.geometryService.isInsideRectengle, 'Ellipse': this.geometryService.isInsideEllipse }
   responseSubjects = {
     MarkersResponseAddOK: new Subject<any>(),
-    MarkerRsponseDontAdd: new Subject<any>()
-    }
-    MarkerResponseSub= new Subject<any>()
-  errorSubject = new Subject<any>()
-  NewMarker=false;
+    MarkerRsponseDontAdd: new Subject<any>(),
+    MarkerRsponseDontRemove: new Subject<any>(),
+    MarkerResponseRemoveOk: new Subject<any>()
+  }
+  //MarkerResponseSub = new Subject<any>()
+  errorSubject = new Subject<any>();
   opacity = 0.2
   foreColor: string = "black"
   backColor: string = "black"
@@ -28,13 +53,13 @@ export class EditDocService {
   drawRectSubject$ = new Subject<any>()
   freeDrawSubject$ = new Subject<FreeDraw>()
   drawingMode = "Ellipse"
-  constructor(private commservice: CommService) { }
+  constructor(private commservice: CommService, private geometryService: GeometryService) { }
   setDrawMode(drawingMode: string) {
     this.drawingMode = drawingMode
   }
 
   NoFill() {
-    this.opacity = 0.0
+    this.backColor = 'transparent'
   }
   setBackColor(value: string) {
     this.backColor = value
@@ -43,6 +68,7 @@ export class EditDocService {
     this.foreColor = color
   }
   freeDrawEvents(mouseUp$, mouseMove$, mouseDown$) {
+
     var drawing$ = mouseDown$.pipe(
       switchMap(evt => mouseMove$.pipe(
         takeUntil(mouseUp$)
@@ -53,7 +79,8 @@ export class EditDocService {
     var obs$ = drawing$.pipe(
       map((evt: MouseEvent) => this.freeDrawGeometry(evt))
     )
-    obs$.subscribe((freeDrawObject: FreeDraw) =>
+    /**can drawing only in draw mode */
+    obs$.pipe(tap(param => console.log("select mode=:" + this.selectMode)), filter(x => this.selectMode == false)).subscribe((freeDrawObject: FreeDraw) =>
       this.freeDrawSubject$.next(freeDrawObject))
 
     var poly$ = this.freeDrawSubject$.pipe(
@@ -71,7 +98,51 @@ export class EditDocService {
     }
     )
 
+    var point$ = mouseDown$.pipe(filter(x => this.selectMode == true), map((evt: MouseEvent) => this.freeDrawGeometry(evt)));
+    point$.subscribe((res: FreeDraw) => {
+      debugger
+      this.SelectedPoint = { x: res.fromX, y: res.fromY }
+      this.selectedMakrer$ = this.SelectedMarker(this.MyMarkers, this.SelectedPoint)
+    })
+    var markerToShowComment$ = point$.pipe(tap((p: FreeDraw) => console.log("from select point" + p.fromX + " " + p.fromY)))
+    markerToShowComment$.subscribe((res: FreeDraw) =>{debugger; this.selectedMakrer$!=null?this.markerClicked(this.selectedMakrer$.MarkerID):this.markerClicked(null)})
   }
+  removeMarker(docid:Guid,userId:string) {
+    if (this.selectedMakrer$ != null) {
+      var markers = this.removeOne(this.MyMarkers.indexOf(this.selectedMakrer$), this.MyMarkers,docid,userId);
+      return markers;
+    }
+    return this.MyMarkers
+
+  }
+  removeOne(index: number, markers: MarkerDTO[],docid:Guid,userid:string){
+    var req = new MarkerRequestRemove();
+    req.MarkerId = markers[index].MarkerID;
+    req.DocID=docid;
+    req.UserID=userid;
+    var obs = this.commservice.RemoveMarker(req)
+    var obs2 = obs.pipe(map(response => [this.responseSubjects[response.ResponseType], response]))
+    obs2.subscribe(
+      ([responseSubject, response]) => responseSubject.next(response),
+      error => this.onError().next(error))
+  }
+  /**
+   *get list of markers and point and return the first marker that the point inside here
+   */
+  SelectedMarker(markers: MarkerDTO[], point): MarkerDTO {
+
+    var res = null
+    if (point != null) {
+      res = markers.find(mar =>
+        this.functionsByType[mar.MarkerType](mar.CenterX, mar.CenterY, mar.RadiusX, mar.RadiusY, point.x, point.y)
+      )
+      if (res != null)
+        return res;
+    }
+
+
+  }
+
   Init(drawingCanvas: ElementRef) {
     console.log("Init service", drawingCanvas)
     this.drawingCanvas = drawingCanvas;
@@ -82,35 +153,9 @@ export class EditDocService {
     this.freeDrawEvents(mouseUp$, mouseMove$, mouseDown$);
 
   }
-  // makeShape(poly) {
-  //   var centerX = 0;
-  //   var centerY = 0;
-  //   for (var i = 0; i < poly.length; i++) {
-  //     centerX += poly[i].toX
-  //     centerY += poly[i].toY
-  //   }
-  //   centerX /= poly.length
-  //   centerY /= poly.length
 
-  //   var radiusX = 0
-  //   var radiusY = 0
-  //   for (var i = 0; i < poly.length; i++) {
-  //     radiusX += Math.abs(poly[i].toX - centerX)
-  //     radiusY += Math.abs(poly[i].toY - centerY)
-
-  //   }
-  //   radiusX /= poly.length
-  //   radiusY /= poly.length
-  //   return {
-  //     cx: centerX, cy: centerY, radiusx: radiusX, radiusy: radiusY,
-  //     foreColor: this.foreColor, backColor: this.backColor, opacity: this.opacity
-  //   }
-
-  // }
   createShape(poly): Shape {
-    debugger
     if (poly.length > 0) {
-      this.NewMarker=true;
       var shapePoly = poly.map(elemObj => new point(elemObj.toX, elemObj.toY))
       var center = new point(0, 0)
       center = shapePoly.reduce((acc, pt) => acc.add(pt))
@@ -118,7 +163,9 @@ export class EditDocService {
       var radius = new point(0, 0)
       radius = shapePoly.reduce((acc, pt) => acc.add(new point(Math.abs(pt.X - center.X), Math.abs(pt.Y - center.Y))))
       radius = radius.div(shapePoly.length)
-      return new Shape(center.X, center.Y, radius.X, radius.Y, this.foreColor, this.backColor, this.drawingMode)
+      var shape: Shape = new Shape(center.X, center.Y, radius.X, radius.Y, this.foreColor, this.backColor, this.drawingMode);
+      shape.IsNew = true;
+      return shape;
     }
   }
   freeDrawGeometry(evt: MouseEvent): any {
@@ -133,21 +180,6 @@ export class EditDocService {
 
 
   }
-  // getGeometry(evt: MouseEvent): any {
-  //   var retval: any = {}
-  //   var canvs: HTMLCanvasElement
-  //   var ctx: CanvasRenderingContext2D
-  //   var rect = this.drawingCanvas.nativeElement.getBoundingClientRect()
-  //   console.log(rect)
-  //   retval.cx = evt.clientX - rect.left
-  //   retval.cy = evt.clientY - rect.top
-  //   retval.radiusx = 30
-  //   retval.radiusy = 30
-  //   retval.foreColor = this.foreColor
-  //   retval.backColor = this.backColor + this.opacity
-  //   return retval
-  // }
-
   onDrawEllipse$(): Observable<Shape> {
     return this.drawEllipseSubject$
   }
@@ -158,7 +190,6 @@ export class EditDocService {
     return this.freeDrawSubject$
   }
   AddMarker(marker: MarkerRequestAdd) {
-    debugger
     var obs = this.commservice.AddMarker(marker)
     var obs2 = obs.pipe(
       map(response => [this.responseSubjects[response.ResponseType], response])
@@ -175,49 +206,57 @@ export class EditDocService {
     )
 
   }
-  GetMarkers(req:RequestGetMarkers){
-    var markersarr:MarkerDTO[]=[]
+  GetMarkers(req: RequestGetMarkers) {
+    var markersarr: MarkerDTO[] = []
     var obs = this.commservice.getAllMarkers(req)
     var obs2 = obs.pipe(
-    filter((res)=>res.Markers.length>0)
+      filter((res) => res.Markers.length > 0)
     )
 
     obs2.subscribe(
       (markerresponse) => {
-        
+
         //**draw the markers from database */
         this.drawOldMrkers(markerresponse.Markers),
-        tap(res=>console.log(res))
-        //this.MarkerResponseSub.next(markerresponse)
+          tap(res => console.log(res))
       },
       error => {
-        
-        tap(res=>console.log(res)),
-        console.log(error)
+
+        tap(res => console.log(res)),
+          console.log(error)
         this.onError().next(error)
       }
 
     )
+
   }
   /**
    *draw old markers(working!!)
    */
-  drawOldMrkers(list:MarkerDTO[]){
+  drawOldMrkers(list: MarkerDTO[]) {
+    this.MyMarkers = list;
     list.forEach(element => {
-      var shape=new Shape(element.CenterX,element.CenterY,element.RadiusX,element.RadiusY,element.ForeColor,element.BackColor,element.MarkerType)
-      element.MarkerType=='Rect'?this.drawRectSubject$.next(shape):this.drawEllipseSubject$.next(shape)
+      var shape = new Shape(element.CenterX, element.CenterY, element.RadiusX, element.RadiusY, element.ForeColor, element.BackColor, element.MarkerType)
+      element.MarkerType == 'Ellipse' ? this.drawEllipseSubject$.next(shape) : this.drawRectSubject$.next(shape)
     });
   }
+
+
   onError(): Subject<any> {
     return this.errorSubject
   }
+
   onMarkersResponseAddOK(): Subject<any> {
     return this.responseSubjects.MarkersResponseAddOK;
   }
   onMarkerRsponseDontAdd(): Subject<any> {
     return this.responseSubjects.MarkerRsponseDontAdd;
   }
-  // onMarkersArrived():Subject<any>{
-  //   return this.MarkerResponseSub;
-  // }
+  onMarkerResponseRemoveOk(): Subject<any> {
+    return this.responseSubjects.MarkerResponseRemoveOk;
+  }
+  onMarkerRsponseDontRemove(): Subject<any> {
+    return this.responseSubjects.MarkerRsponseDontRemove;
+  }
+
 }

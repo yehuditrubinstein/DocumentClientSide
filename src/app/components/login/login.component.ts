@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
       response => {
         debugger
         console.log("hi!!!!")
-        this.DocumentSharingService.openSocket(this.userForm.value.UserID);
         this.authservice.loginAuth(this.userForm.value.UserID);
         this.router.navigate(['my-document-component'])
       })

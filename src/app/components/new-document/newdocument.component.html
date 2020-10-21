@@ -3,10 +3,10 @@
     <input id="DocName" formControlName="DocName"/><br/>
     <label>ImageUrl:</label>
     <input id="ImageUrl" formControlName="ImageUrl"/><br/>
+    <label for=FileUploader ><input id=FileUploader type="file" multiple="false" (change)="upload($event.target.files)" /></label>
     <button type="submit" [disabled]='!DocForm.valid' >create</button>
 
 </form>
 
 
-      <!-- <input class="file-upload-input" type="file" value="" (change) ="onFileChange($event)"  #file  />
-        <h3>לחץ כאן להעלאת קבצים</h3> -->
+      

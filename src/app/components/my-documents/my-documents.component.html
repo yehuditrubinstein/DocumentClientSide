@@ -1,23 +1,29 @@
-<h1>my documents work!</h1>
-<input type="button" value="create new document" (click)="OpenAddDoc()">
+<button class="btn" (click)="OpenAddDoc()"><i class="fa fa-upload"></i> upload new document </button>
 <router-outlet></router-outlet>
-<h2>my documents</h2>
-<div *ngFor="let item of myDocs let i=index" class="CardStyle" data-font-size="12" data-font-size-type="px"
-  style="width: 50%;">
-  <div (click)="OpenEditDoc(item)" tabindex="0" data-font-size="12" data-font-size-type="px">
-    <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
-    <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
-    <a href="{{item.ImageURL}}" target="_blank"> <input type="button" value="צפה בקובץ" class="bttn"></a>
-    <input type="button" value="מחק קובץ" (click)="removefile()" class="bttn red" />
+<div id="list">
+  <h2>my documents</h2>
+  <div *ngFor="let item of myDocs let i=index"  data-font-size="12" data-font-size-type="px"
+    style="width: 50%;">
+    <div tabindex="0" data-font-size="12" data-font-size-type="px">
+
+      <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
+      <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
+
+      <a href="{{item.ImageURL}}" target="_blank"><button class="btn"><i class="fa fa-download"></i></button></a>
+      <button class="btn" (click)="removefile(item)"><i class="fa fa-trash"></i></button>
+      <button class="btn" (click)="OpenEditDoc(item)"><i class="fa fa-pencil"></i></button>
+    </div>
   </div>
-</div>
-<h2>my shared documents</h2>
-<div *ngFor="let item of myShareDocs let i=index" class="CardStyle" data-font-size="12" data-font-size-type="px"
-  style="width: 50%;">
-  <div (click)="OpenEditDoc(item)" tabindex="0" data-font-size="12" data-font-size-type="px">
-    <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
-    <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
-    <a href="{{item.ImageURL}}" target="_blank"> <input type="button" value="צפה בקובץ" class="bttn"></a>
-    <input type="button" value="מחק קובץ" (click)="removefile()" class="bttn red" />
+  <h2>my shared documents</h2>
+  <div *ngFor="let item of myShareDocs let i=index"  data-font-size="12" data-font-size-type="px"
+    style="width: 50%;">
+    <div tabindex="0" data-font-size="12" data-font-size-type="px">
+      <div data-font-size="14" data-font-size-type="px">{{item.ImageURL}}</div>
+      <div data-font-size="12" data-font-size-type="px">{{item.DocName}}</div>
+      <a href="{{item.ImageURL}}" target="_blank"><button class="btn"><i class="fa fa-download"></i></button></a>
+      <button class="btn" (click)="removeShareFile(item)"><i class="fa fa-trash"></i></button>
+      <button class="btn" (click)="OpenEditDoc(item)"><i class="fa fa-pencil"></i></button>
+
+    </div>
   </div>
 </div>

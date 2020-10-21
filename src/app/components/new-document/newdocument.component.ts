@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class NewdocumentComponent implements OnInit {
   DocForm: FormGroup
-  constructor(private authservice: AuthService, private newdocservice: NewDocumentService,private router:Router) { }
+  constructor(private authservice: AuthService, private newdocservice: NewDocumentService, private router: Router) { }
 
   ngOnInit(): void {
     this.DocForm = new FormGroup(
@@ -20,8 +20,8 @@ export class NewdocumentComponent implements OnInit {
         DocName: new FormControl(''),
         ImageUrl: new FormControl('', [Validators.required])
       })
-      this.newdocservice.onDocumenrResponseUploadOK().subscribe(response=>this.router.navigate(['/my-document-component']))
-      this.newdocservice.onError().subscribe(message=>console.log(message))
+    this.newdocservice.onDocumenrResponseUploadOK().subscribe(response => this.router.navigate(['/my-document-component']))
+    this.newdocservice.onError().subscribe(message => console.log(message))
   }
   onSubmit() {
     console.log(this.DocForm.value)
@@ -32,4 +32,14 @@ export class NewdocumentComponent implements OnInit {
     request.documentDTO.UserID = this.authservice.getUser()
     this.newdocservice.UploaNewDocument(request)
   }
+  upload(files: File[]) {
+    debugger
+    let request = new DocumentRequest()
+    request.documentDTO = new DocumentDTO();
+    request.documentDTO.DocName = this.DocForm.value.DocName;
+    request.documentDTO.ImageURL = this.DocForm.value.ImageUrl;
+    request.documentDTO.UserID = this.authservice.getUser()
+    this.newdocservice.UploadFile(files, this.DocForm.value.DocName,request);
+  }
+
 }

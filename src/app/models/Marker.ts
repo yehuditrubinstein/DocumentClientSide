@@ -25,6 +25,7 @@ import { Guid } from "guid-typescript";
 //       }
 // }
 export class MarkerDTO implements Shape {
+      MarkerID:Guid;
       CenterX: number
       DocID: Guid
       MarkerType: string
@@ -34,6 +35,7 @@ export class MarkerDTO implements Shape {
       CenterY: number
       BackColor: string
       ForeColor: string
+      IsNew:boolean 
       constructor(cx: number, cy: number, radiusx: number, radiusy: number, foreColor: string, backColor: string, DocID: Guid, UserID: string, markerType: string) {
             this.CenterX =Math.ceil(cx);
             this.CenterY = Math.ceil(cy);
@@ -49,4 +51,9 @@ export class MarkerDTO implements Shape {
 }
 export class MarkerResponse{
       Markers:MarkerDTO[];
+}
+export class MarkerRequestRemove{
+      MarkerId:Guid
+      DocID:Guid
+      UserID:String;
 }

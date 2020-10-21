@@ -6,6 +6,7 @@ export class Shape {
     BackColor: string
     ForeColor: string
     MarkerType: string
+    IsNew:boolean
     constructor(cx: number, cy: number, radiusx: number, radiusy: number, foreColor: string, backColor: string, MarkerType: string) {
         this.CenterX = cx;
         this.CenterY = cy;

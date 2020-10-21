@@ -1,0 +1,21 @@
+<div *ngFor="let item of comments">
+    <div [class.commentOfMarkerBorder]=item.isOfMarker  [class.commentBoreder]=!item.isOfMarker>
+        <p>Written by: {{item.UserId}}</p>
+        <p> date: {{item.CommentDate}}</p>
+        <p> {{item.Content}} </p>
+        <button class="btn" *ngIf="item.UserId==user" (click)="deleteComment(item)"><i class="fa fa-trash"></i></button>
+
+    </div>
+</div>
+<div *ngIf="openAddComment">
+  
+<form id="form" [formGroup]="commentForm" (ngSubmit)="addComment()">
+    
+    <label>what the comment?</label>
+    <input id="content" formControlName="content"/><br/>
+    <button type="submit">save</button>
+    <input type="button" value="cancel" (click)="cancel()">
+
+
+</form>
+</div>

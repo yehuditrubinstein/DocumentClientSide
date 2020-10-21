@@ -10,18 +10,19 @@ export class AuthService {
 
   constructor(private router: Router) { }
   getUser() {
-    return localStorage.getItem('currentUser')
+    return sessionStorage.getItem('currentUser')
   }
   isAuth() {
-    if (localStorage.getItem('currentUser'))
+    if (sessionStorage.getItem('currentUser'))
       return true;
   }
   loginAuth(user: string) {
-    localStorage.setItem('currentUser', user);
+    debugger
+    sessionStorage.setItem('currentUser', user);
     this.router.navigate(["/my-document-component"]);
   }
   logout() {
-    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
     this.router.navigate(["/login-component"]);
   }
   SetEditDoc(MyDoc: DocumentDTO) {

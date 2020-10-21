@@ -1,4 +1,24 @@
+/* Style buttons */
+.btn {
+  background-color: DodgerBlue; 
+  border: none; 
+  color: white; 
+  padding: 12px 16px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  max-width: 300px;
+  margin: 0 auto;
+}
 
+.btn:hover {
+  background-color: RoyalBlue;
+}
+#list{
+  margin: 0 auto;
+  max-width: 300px;
+  border:DodgerBlue 2px solid ;
+text-align: center;
+}
   .container2 {
     position: absolute;
     text-align: right;
@@ -50,79 +70,4 @@
         flex-basis: 1%;
       }
     
-      /* .MainPanelHeader {
-        display: flex;
-        justify-content: space-between;
-      }
-      
-      .KorotFileSize{
-      position: absolute;
-      left: 2px;
-      top: 30px;
-      }
-      
-      .KorotOpt {
-      height:0px;
-      padding:0px !important;
-      overflow:hidden;
-      }
-      
-      .KorotFile.Open .KorotOpt {
-      height:32px !important;
-      padding:5px 0px !important;
-      }
-      
-      .DefaultCVText {
-      color: red;
-      display: inline-block;
-      margin-right: 5px;
-      font-size: 12px;
-      }
-      
-      .CardRow > #wrapDeatils {
-      padding-right: 40px;
-      position:relative;
-      }
-      
-      .CardRow > #wrapDeatils:before {
-      content: "";
-      background-image: url(/images/topsargelicons/document_black.png);
-      display: block;
-      width: 30px;
-      height: 30px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      position: absolute;
-      right: 4px;
-      background-position: center;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      }
-      
-      .CardRow > #wrapDeatils .CardHeader {
-      padding: 3px 0;
-      }
-      
-      @media only screen and (max-width:700px){
-      .CardRow.KorotFile {
-        width:calc(100% - 20px);
-        padding:10px;
-      }
-      
-      .KorotOpt {
-        display: flex;
-        justify-content: space-around;
-      }
-      
-      .KorotOpt > input {
-        width: 33%;
-        line-height: 100%;
-      }
-      
-      #frmKorot {
-        height: 500px !important;
-      }
-      }
-       */
       

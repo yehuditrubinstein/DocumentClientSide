@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
-export class DocumentResponse{
-    documentDTO:DocumentDTO[];
+export class DocumentResponse {
+    documentDTO: DocumentDTO[];
 }
 export class DocumentRequest {
     documentDTO: DocumentDTO
@@ -8,12 +8,19 @@ export class DocumentRequest {
     //     this.documentDTO = documentDTO
     // }
 }
+export class DocumentRequestRemove{
+    DocID:Guid
+    
+}
+export class DocumentRequestGetForUser{
+    UserID:string
+}
 export class DocumentDTO {
 
     UserID: string
     ImageURL: string
     DocName: string
-   DocID: Guid
+    DocID: Guid
     // constructor(DocId: string, DocName: string, ImageURL: string, UserID: string) {
     //     this.DocId = DocId;
     //     this.DocName = DocName;
